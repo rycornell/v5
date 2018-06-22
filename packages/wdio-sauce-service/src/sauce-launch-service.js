@@ -87,11 +87,13 @@ export default class SauceService {
          * framework hooks in order to execute async functions.
          * This tweak allows us to set the real suite name for jasmine jobs.
          */
-        if (this.suiteTitle === 'Jasmine__TopLevel__Suite') {
-            this.suiteTitle = test.fullName.slice(0, test.fullName.indexOf(test.name) - 1)
+        if (this.suiteTitle === jasmineTopLevelSuite) {
+            this.suiteTitle = test.fullName.slice(0, test.fullName.indexOf(test.title) - 1)
         }
 
-        global.browser.execute('sauce:context=' + test.parent + ' - ' + test.title)
+        const context = test.parent === jasmineTopLevelSuite ? test.fullName : test.parent + ' - ' + test.title
+
+        global.browser.execute('sauce:context=' + context)
     }
 
     afterSuite (suite) {
